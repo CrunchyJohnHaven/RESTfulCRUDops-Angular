@@ -48,12 +48,12 @@ module.exports = {
             }
         });
     },
-    // create: function(req,res) {
-    //     var task = new Task({title:req.params.title, description: req.params.description, completed: req.params.completed});
-    //     task.save(function(err,task){ 
-    //         if (!err) {
-    //             res.redirect('/tasks');
-    //         }
-    //     });
-    // }
+    create: function(req,res) {
+        var task = new Task({title:req.params.title, description: req.params.description, completed: req.params.completed});
+        task.save(function(err,task){ 
+            if (!err) {
+                res.redirect('/tasks');
+            }
+        });
+    }
 };
