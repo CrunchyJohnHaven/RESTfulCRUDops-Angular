@@ -1,10 +1,10 @@
-// _httpService -> talking about http.service.ts injection
-// getTasksFromService -> invoke the service (_httpService: all the methods and attributes in the service)
-  // - this._httpService.getTasks() - invocation of the functions in http.service.ts (returns observable) -> the call = observable
-    // - have the component subscribe to the observable -> pass the data to the component by passing the observable to
-      // the app.component.html (subscribe -> this.tasks=data)
+console.log( '******** app.component.ts ********' );
 
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit
+} from '@angular/core';
+
 import { HttpService } from './http.service';
 
 @Component({
@@ -12,76 +12,97 @@ import { HttpService } from './http.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit {
-  title = 'app'; // ts file controlling the logic producing html
-  tasks: any;
+
+  new_task: any;
+  updated_task: any;
+  tasks_all = [];
+  task = {};
+
   num: number;
   randNum: number;
   str: string;
   first_name: string;
+  loggedIn: boolean;
 
+  constructor( private _httpService: HttpService ) {
 
-
-  constructor(private _httpService: HttpService) {
   }
+
   ngOnInit() {
-    this.getTasksFromService();
-    this.getExamplesFromService();
+    this.new_task = { title: '', description: '' };
+    this.updated_task = { title: '', description: '' };
+
+    // OTHER EXAMPLES
+    this.num = 7;
+    this.randNum = Math.floor( (Math.random() * 2 ) + 1 );
+    this.str = 'Hello Angular Developer!';
+    this.first_name = 'Alpha';
+    this.loggedIn = true;
   }
-  getTasksFromService() {
-    const observable = this._httpService.getTasks();
-    observable.subscribe(data => {
-      // console.log('Got our data!', data);
-      this.tasks = data;
+
+  tasks_create() {
+    const observable = this._httpService.tasks_create( this.new_task );
+    observable.subscribe( data => {
+      console.log ( 'tasks_create says:', data );
+    });
+    this.new_task = { title: '', description: '' };
+  }
+
+  tasks() {
+    console.log('*****app.component.ts - tasks****');
+    const observable = this._httpService.tasks();
+    observable.subscribe( data => {
+      this.tasks_all = data['data'];
+      console.log( 'Got our tasks!', data );
     });
   }
-    getExamplesFromService() {
-      this.num = 7;
-      this.randNum = Math.floor( (Math.random() * 2) + 1);
-      this.str = 'Hello Angular Developer!';
-      this.first_name = 'Alpha';
+
+  tasks_one( id ) {
+    console.log('*****app.component.ts - tasks_one**** : ', id);
+    const observable = this._httpService.tasks_one( id );
+    console.log('const observable: ', observable );
+    observable.subscribe( data => {
+      this.task = data['data'][0];
+      console.log( this.task );
+    });
   }
-  getTasks() {
-    const observable = this._httpService.getTasks();
-    observable.subscribe(data => {
-      this.tasks = data['data'];
-  });
 
+  tasks_update( id ) {
+    console.log('*****app.component.ts - tasks_update****');
+    const observable = this._httpService.tasks_update( id, this.updated_task );
+    observable.subscribe( data => {
+      console.log( data );
+    });
+    this.updated_task = { title: '', description: '' };
+  }
 
+  tasks_delete( id ) {
+    console.log('*****app.component.ts - tasks_delete****');
+    const observable = this._httpService.tasks_delete( id );
+    observable.subscribe( data => {
+      console.log( data );
+    });
+  }
 
+  onButtonClick(): void {
+    console.log('*****app.component.ts - onButtonClick****');
+    console.log( `Click event is working` );
+  }
 
+  onButtonClickParam( num: Number ): void {
+    console.log('*****app.component.ts - onButtonClickParams****');
+    console.log( `Click event is working with the num param: ${num}` );
+  }
 
+  onButtonClickParams( num: Number, str: String ): void {
+    console.log('*****app.component.ts - ButtonClickParams****');
+    console.log( `Click event is working with num param: ${num} and str param ${str}` );
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // onButtonClick(): void {
-  //   console.log(`Click event is working`);
-  // }
-  // onButtonClick(getTasksFromService): void {
-  // for (task in getTasksFromService) {
-  //   console.
-  // }
-  // }
-  // onButtonClickParams(arr: array): void {
-  //   console.log(`${this.tasks}`);
-  // }
-  // onButtonClick(event) {
-  //   console.log(`Click event is working, event:`, event);
-// }
-
-
-// lrwxr-xr-x  1 root         admin        38 Feb 16 17:28 ng -> ../lib/node_modules/angular-cli/bin/ng
+  onButtonClickEvent( event: any ): void {
+    console.log('*****app.component.ts - ButtonClickEvent****');
+    console.log( `Click event is working with event: `, event);
+  }
+}

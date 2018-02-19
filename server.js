@@ -1,51 +1,92 @@
-var express = require('express');
-var app = express();
-var path = require('path');
+console.log( "******** server.js *******" );
 
-var bodyParser = require('body-parser');
-app.use(express.static(__dirname + '/myAngularApp/dist'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-// app.set('views', path.join(__dirname, './client/views'));
-// app.set('view engine', 'ejs');
+let express = require( "express" );
+let app = express();
 
-require('./server/config/mongoose.js');
+let bodyParser = require( "body-parser" );
+let path = require( "path" );
+let mongoose = require( "mongoose" );
 
-var routes_setter = require('./server/config/routes.js');
-routes_setter(app);
+mongoose.Promise = global.Promise;
 
-app.listen(8000, function() {
-    console.log("listening on port 8000");
+app.use( bodyParser.urlencoded( {extended: true } ) );
+app.use( bodyParser.json() );
+
+app.use( express.static( __dirname + "/myAngularApp/dist" ) );
+
+mongoose.connect( "mongodb://localhost/restful_tasks_crud" );
+
+let TaskSchema = new mongoose.Schema( {
+    title: { type: String, required: true },
+    description: { type: String, default: "" },
+    completed: { type: Boolean, default: false },
+}, { timestamps: true } );
+let Task = mongoose.model( "Task", TaskSchema );
+
+app.get( "/tasks", function( req, res ){
+    Task.find( {}, function( err, data ){
+        if( err )
+            res.send( err );
+        else
+            res.json( { message: "success", data: data } );
+    });
 });
-// - ng new myAngularApp
-// - ng serve
-// - ng build --watch
 
-// RUNNING terminal programs 
-// sudo mongod 
-// mongo 
-// ng build --watch (in app folder)
-// nodemon server.js 
+app.get( "/tasks/:id", function( req, res ){
+    Task.find( { _id: req.params.id }, function( err, data ){
+        if( err )
+            res.send( err );
+        else
+            res.json( { message: "success", data: data } );
+    });
+});
 
-// ADDING A SERVICE 
-// add a service named 'http' within the app folder -> ng g s http/
-// within app.module.ts -> 
-    // register service named 'http' by adding {import { HttpService } from './http.service'}
-    // provides: [HttpService], 
-    // import { HttpClientModule } from '@angular/common/http';
+app.post( "/tasks", function( req, res ){
+    let task = new Task( {
+        title: req.body.title,
+        description: req.body.description
+    });
+    task.save( function( err ){
+        if( err )
+            res.send( err );
+        else
+            res.json( { message: "success" } );
+    });
+});
 
-// within http.service.ts  ->
-//     - import { HttpClient } from '@angular/common/http';
-//     -     tempObservable.subscribe(data => console.log('Got our tasks!', data));
-//     export class HttpService {
-//         constructor(private _http: HttpClient) {
-//         this.getTasks();
-      
-//         }
+app.put( "/tasks/:id", function( req, res ){
+    Task.update( { _id: req.params.id }, {
+        title: req.body.title,
+        description: req.body.description
+    }, function( err ){
+        if( err )
+            res.send( err );
+        else
+            res.json( { message: "success" } );
+    });
+});
 
-// within app.component.ts ->
-//     - import { HttpService } from './http.service';
-//     -   constructor(private _httpService: HttpService) {
-//     }
-//   }
-  
+app.delete( "/tasks/:id", function( req, res ){
+    Task.remove( { _id: req.params.id }, function( err ){
+        if( err )
+            res.send( err );
+        else
+            res.json( { message: "success" } );
+    });
+});
+
+
+app.listen( 8000, function() {
+    console.log( "listening on port 8000" );
+});
+
+
+
+
+
+
+
+
+
+
+

@@ -1,33 +1,71 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div class="root">
-<div style="text-align:center">
-  <h1>Welcome to {{ title }}!</h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
+<h1>New Task</h1>
+<form (submit) = "tasks_create()">
+  <p>{{ new_task | json }}</p>
+  <input type="text" name="new_task.title" [(ngModel)]="new_task.title" placeholder="title"/>
+  <br>
+  <input type="text" name="new_task.description" [(ngModel)]="new_task.description" placeholder="description"/>
+  <br>
+  <input type="submit" value="Create Task" />
+</form>
 
-  <ul>
-    <li *ngFor="let task of tasks" ng-if="visible">
-      {{task.title}},
-      {{task.description}},
-      <br>
-      Completed: {{task.completed}}
-    </li>
-    <p> Value of num is: {{num}} </p>
-    <p> Value of randNum is: {{randNum}}</p>
-  <p> {{str}}</p>
-  <p> <input type="text" [value]="first_name"/> </p>
+<h1>Task List</h1>
 
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<button (click) = "tasks()" >Get all tasks</button>
+
+<p *ngIf = "task.description">
+  {{task.description}}
+</p>
+
+<p *ngFor="let i of tasks_all">
+  <button (click) = "tasks_one( i._id )">Details</button>
+  <button (click) = "updated_task = i"  >Update</button>
+  <button (click) = "tasks_delete( i._id )">Delete</button>
+  Task:
+  {{i.title}}
+</p>
+
+<h1>Edit Task</h1>
+<form (submit) = "tasks_update( updated_task._id )">
+  <p>{{ updated_task | json }}</p>
+  <input type="text" name="updated_task.title" [(ngModel)]="updated_task.title" placeholder="title"/>
+  <br>
+  <input type="text" name="updated_task.description" [(ngModel)]="updated_task.description" placeholder="description"/>
+  <br>
+  <input type="submit" value="Save"/>
+</form>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<h2>other examples</h2>
+<p *ngIf = "loggedIn">You are logged in!</p>
+<p *ngIf = "tasks.length < 5">You need more tasks</p>
+
+<button (click) = "onButtonClick()" >Click me!</button>
+<button (click) = "onButtonClickParam( 5 )" >Click me!</button>
+<button (click) = "onButtonClickParams( 5, 'hello')" >Click me!</button>
+<button (click) = "onButtonClickEvent( $event )" >Click me!</button>
 
 
+<h3>Value of num is {{ num }}</h3>
+<h3>Value of randNum is: {{ randNum }}</h3>
+<h3>{{str}}</h3>
+<input type="text" [value]="first_name"/>

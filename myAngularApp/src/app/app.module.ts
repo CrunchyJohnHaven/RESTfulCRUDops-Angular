@@ -1,26 +1,22 @@
+console.log( '******** app.module.ts ********' );
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { HttpService } from './http.service'; // register service named 'http' by adding import { HttpService } from
-// './http.service' within app.module.ts
+
+
 import { AppComponent } from './app.component';
-import { TaskComponent } from './task/task.component';
 
-// const routes: Routes = [
-//   { path: '', component: showAll },
-//   [ pathL '', pathMath:]
-// ]
+import { HttpService } from './http.service'; // STITCHING
+import { HttpClientModule } from '@angular/common/http'; // STITCHING
+import { FormsModule } from '@angular/forms'; // STITCHING3
+@NgModule( {
+  declarations: [AppComponent],
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    TaskComponent,
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-  ],
-  providers: [HttpService], // registering service named HttpService by adding it to our array of providers
+  imports: [BrowserModule, HttpClientModule, FormsModule],
+
+  providers: [HttpService],
+
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {}

@@ -1,20 +1,31 @@
-// getTasks(){} -> makes an http request
-// make http request ->
+console.log( "******** http.service.ts ********" );
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+
+import { HttpClient } from "@angular/common/http";
 
 @Injectable()
 export class HttpService {
-  constructor(private _http: HttpClient) {
-  // this.getTasks(); -> no longer want the service itself to invoke its function, have the component do that
 
+  constructor( private _http: HttpClient ){}
+
+  tasks(){
+    return this._http.get( "/tasks" );
   }
 
-  getTasks() {
+  tasks_one( id ){
+    return this._http.get( `/tasks/${id}` );
+  }
 
-    // const tempObservable = this._http.get('/tasks');
-    // tempObservable.subscribe(data => console.log('Got our tasks!', data));
-    return this._http.get('/tasks'); // -> deliver to whoever asks for it
+  tasks_create( new_task ){
+    return this._http.post( "/tasks", new_task );
+  }
+
+  tasks_update( id, updated_task ){
+    return this._http.put( `/tasks/${id}`, updated_task )
+  }
+
+  tasks_delete( id ){
+    return this._http.delete( `/tasks/${id}`)
   }
 }
